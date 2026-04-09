@@ -2,9 +2,7 @@ import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
-# --- Your existing code for start, menu, button_handler remains exactly the same ---
-
-# ---------- Simple menu handler ----------
+# ---------- Menu handlers ----------
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "🤖 Welcome to Trading Bot!\n\n"
@@ -42,20 +40,14 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await query.edit_message_text("Unknown command")
 
-# --- Bot setup function (called from app.py) ---
+# ---------- Bot setup function ----------
 def setup_bot():
     TOKEN = os.environ.get("TELEGRAM_TOKEN")
     if not TOKEN:
         raise ValueError("No TELEGRAM_TOKEN environment variable set")
-
+    
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("menu", menu))
     app.add_handler(CallbackQueryHandler(button_handler))
     return app
-
-# If run directly (for local testing)
-if __name__ == "__main__":
-    app = setup_bot()
-    print("Bot is running locally... Press Ctrl+C to stop.")
-    app.run_polling()
