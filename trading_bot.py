@@ -2,10 +2,7 @@ import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
-# Token from environment variable (set on Render)
-TOKEN = os.environ.get("TELEGRAM_TOKEN")
-if not TOKEN:
-    raise ValueError("No TELEGRAM_TOKEN environment variable set")
+# --- Your existing code for start, menu, button_handler remains exactly the same ---
 
 # ---------- Simple menu handler ----------
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -45,8 +42,12 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         await query.edit_message_text("Unknown command")
 
-# ---------- Bot setup function (called from app.py) ----------
+# --- Bot setup function (called from app.py) ---
 def setup_bot():
+    TOKEN = os.environ.get("TELEGRAM_TOKEN")
+    if not TOKEN:
+        raise ValueError("No TELEGRAM_TOKEN environment variable set")
+
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("menu", menu))
